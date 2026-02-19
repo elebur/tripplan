@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 
 from api.seralizers import ProjectSerializer
-from core.models import Project
+from api.views.services import validate_and_cache_initial_places
+from core.models import Place, Project, ProjectPlace
 
 
 @api_view(["GET"])
@@ -22,13 +23,28 @@ def list_projects(request: Request) -> Response:
 def create_project(request: Request) -> Response:
     serializer = ProjectSerializer(data=request.data)
 
-    if serializer.is_valid():
-        serializer.save()
-        status_code = status.HTTP_201_CREATED
-        result = {"project_id": serializer.data["id"]}
-    else:
-        status_code = status.HTTP_400_BAD_REQUEST
-        result = {"details": serializer.errors}
+    status_code = status.HTTP_400_BAD_REQUEST
+
+    if not serializer.is_valid():
+        return Response({"details": serializer.errors}, status=status_code)
+    init_places = serializer.validated_data.pop("initial_places", None)
+    if init_places:
+        success, details = validate_and_cache_initial_places(init_places)
+        if not success:
+            return Response({"details": details}, status=status_code)
+
+    project = serializer.save()
+
+    if init_places:
+        project_with_places = [
+            ProjectPlace(project=project, place=Place.objects.get(artic_id=pl_id)) for pl_id in init_places
+        ]
+
+        ProjectPlace.objects.bulk_create(project_with_places)
+
+    status_code = status.HTTP_201_CREATED
+    result = {"project_id": serializer.data["id"]}
+
 
     return Response(result, status=status_code)
 

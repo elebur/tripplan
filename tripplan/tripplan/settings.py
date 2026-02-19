@@ -122,3 +122,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MAX_ALLOWED_PLACES_PER_PROJECT = 10
+ARTIC_API_ENDPOINT = "https://api.artic.edu/api/v1/galleries/"
