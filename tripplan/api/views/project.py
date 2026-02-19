@@ -11,6 +11,13 @@ from api.seralizers import ProjectSerializer
 from core.models import Project
 
 
+@api_view(["GET"])
+def list_projects(request: Request) -> Response:
+    projects = Project.objects.all()
+    serializer = ProjectSerializer(projects, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 @api_view(["POST"])
 def create_project(request: Request) -> Response:
     serializer = ProjectSerializer(data=request.data)
