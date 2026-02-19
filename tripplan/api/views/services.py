@@ -81,7 +81,7 @@ def fetch_and_cache_places(ids: Sequence[int]) -> list:
     places = resp.json()["data"]
     fetched = set()
     for place in places:
-        Place.objects.create(name=place["title"], artic_id=place["id"])
+        Place.objects.get_or_create(name=place["title"], artic_id=place["id"])
         fetched.add(place["id"])
 
     return list(non_cached.difference(fetched))
