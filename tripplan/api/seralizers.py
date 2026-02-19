@@ -15,4 +15,4 @@ class ProjectSerializer(serializers.ModelSerializer):
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Place
-        fields = "__all__"
+        fields = ["artic_id"]
