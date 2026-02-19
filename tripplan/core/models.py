@@ -9,7 +9,7 @@ class Project(models.Model):
 
 class Place(models.Model):
     name = models.CharField(max_length=128, null=True)
-    artic_id = models.BigIntegerField(null=True)
+    artic_id = models.BigIntegerField()
 
 
 class ProjectPlace(models.Model):
