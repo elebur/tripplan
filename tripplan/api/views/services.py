@@ -85,3 +85,11 @@ def fetch_and_cache_places(ids: Sequence[int]) -> list:
         fetched.add(place["id"])
 
     return list(non_cached.difference(fetched))
+
+
+def fetch_and_cache_single_place(id: int) -> Place | None:
+    invalid_id = fetch_and_cache_places([id])
+    if invalid_id:
+        return None
+
+    return Place.objects.get(artic_id=id)
