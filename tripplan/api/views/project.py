@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 
 from api.seralizers import ProjectSerializer
-from api.views.services import validate_and_cache_initial_places
+from api.views.services import validate_places
 from core.models import Place, Project, ProjectPlace
 
 
@@ -29,7 +29,7 @@ def create_project(request: Request) -> Response:
         return Response({"details": serializer.errors}, status=status_code)
     init_places = serializer.validated_data.pop("initial_places", None)
     if init_places:
-        success, details = validate_and_cache_initial_places(init_places)
+        success, details = validate_places(init_places)
         if not success:
             return Response({"details": details}, status=status_code)
 

@@ -1,11 +1,15 @@
+from django.utils.regex_helper import NonCapture
 from core.models import Place
 import requests
 from typing import Sequence
 
+from rest_framework.serializers import ValidationError
+from rest_framework import status
+
 from tripplan.settings import MAX_ALLOWED_PLACES_PER_PROJECT, ARTIC_API_ENDPOINT
 
 
-def validate_and_cache_initial_places(ids: Sequence[int]) -> tuple[bool, str]:
+def validate_places(ids: Sequence[int]) -> tuple[bool, str]:
     """
     Get a sequence of IDs and validate them.
 
@@ -35,7 +39,7 @@ def validate_and_cache_initial_places(ids: Sequence[int]) -> tuple[bool, str]:
     if not success:
         return success, msg
 
-    valid, invalid = fetch_and_cache_places(ids)
+    invalid = fetch_and_cache_places(ids)
 
     if invalid:
         msg = (
@@ -47,7 +51,7 @@ def validate_and_cache_initial_places(ids: Sequence[int]) -> tuple[bool, str]:
     return success, msg
 
 
-def fetch_and_cache_places(ids: Sequence[int]) -> tuple[list, list]:
+def fetch_and_cache_places(ids: Sequence[int]) -> list:
     """
     Get a sequence of IDs and check if each exists in the internal DB.
     If the ID doesn't exist in the DB the function will try to fetch it from the API.
@@ -56,21 +60,29 @@ def fetch_and_cache_places(ids: Sequence[int]) -> tuple[list, list]:
         ids (Sequence[int]): IDs to be checked.
 
     Returns:
-        tuple[list, list]: valid and invalid IDs.
+        list: a list of invalid IDs.
     """
-    valid = []
-    invalid = []
+    non_cached = set()
+    cached = set()
     for ID in ids:
-        if Place.objects.filter(artic_id=ID).exists():
-            valid.append(ID)
-            continue
-
-        resp = requests.get(ARTIC_API_ENDPOINT + str(ID))
-        if resp.status_code == 200:
-            place = resp.json()["data"]
-            Place.objects.create(name=place["title"], artic_id=place["id"])
-            valid.append(ID)
+        if not Place.objects.filter(artic_id=ID).exists():
+            non_cached.add(ID)
         else:
-            invalid.append(ID)
+            cached.add(ID)
 
-    return valid, invalid
+    query = "?ids=" + ",".join(str(id) for id in non_cached)
+
+    resp = requests.get(ARTIC_API_ENDPOINT + query)
+    if resp.status_code != 200:
+        raise ValidationError(
+            {"details": resp.json()["detail"]},
+            code=status.HTTP_400_BAD_REQUEST,
+        )
+
+    places = resp.json()["data"]
+    fetched = set()
+    for place in places:
+        Place.objects.create(name=place["title"], artic_id=place["id"])
+        fetched.add(place["id"])
+
+    return list(non_cached.difference(fetched))
