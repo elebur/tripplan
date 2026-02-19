@@ -1,4 +1,3 @@
-from django.utils.regex_helper import NonCapture
 from core.models import Place
 import requests
 from typing import Sequence
