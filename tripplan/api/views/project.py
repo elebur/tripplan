@@ -32,9 +32,11 @@ def process_project(request: Request, pk) -> Response | HttpResponseNotAllowed:
         return get_project(request, pk)
     if request.method == "DELETE":
         return delete_project(request, pk)
+    if request.method == "PUT":
+        return update_project(request, pk)
 
     msg = f"""{{"detail": "Method \\"{request.method}\\" not allowed."}}"""
-    return HttpResponseNotAllowed(content=msg, permitted_methods=("GET", "POST"))
+    return HttpResponseNotAllowed(content=msg, permitted_methods=("GET", "POST", "PUT"))
 
 
 @api_view(["GET"])
@@ -55,3 +57,15 @@ def delete_project(request: Request, pk: int) -> Response:
 
     project.delete()
     return Response({"details": f"The project<{project_id}> has been deleted."})
+
+
+@api_view(["PUT"])
+def update_project(request: Request, pk: int) -> Response:
+    project = get_object_or_404(Project, pk=pk)
+    serializer = ProjectSerializer(project, data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
