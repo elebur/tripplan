@@ -7,11 +7,13 @@ class Project(models.Model):
     start_date = models.DateField(null=True)
 
 
-
 class Place(models.Model):
-    project = models.ForeignKey(
-        Project, on_delete=models.CASCADE, related_name="places")
     name = models.CharField(max_length=128, null=True)
     artic_id = models.BigIntegerField(null=True)
+
+
+class ProjectPlace(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    place = models.ForeignKey(Place, on_delete=models.CASCADE)
     notes = models.TextField(null=True)
     visited = models.BooleanField(default=False)
