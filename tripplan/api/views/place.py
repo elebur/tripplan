@@ -8,7 +8,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 
-from api.seralizers import PlaceSerializer
+from api.seralizers import PlaceSerializer, ProjectPlaceSerializer
 from api.views.services import fetch_and_cache_single_place
 from core.models import Place, Project, ProjectPlace
 
@@ -42,3 +42,12 @@ def create_place(request: Request, project_id: int):
     return Response(
         {"project_id": project.id, "place_id": place.id}, status=status.HTTP_201_CREATED,
     )
+
+
+@api_view(["GET"])
+def list_places(request: Request, project_id: int):
+    places = ProjectPlace.objects.select_related("place", "project").filter(project__id=project_id)
+    serializer = ProjectPlaceSerializer(places, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
