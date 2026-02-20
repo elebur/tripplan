@@ -1,7 +1,7 @@
 from django.urls import path
 
 from api.views.project import create_project, list_projects, process_project
-from api.views.place import create_place, update_notes, list_places
+from api.views.place import create_place, update_notes, list_places, toggle_visited
 
 urlpatterns = [
     path("project/", create_project, name="create_project"),
@@ -13,5 +13,10 @@ urlpatterns = [
         "project/<int:project_id>/place/<int:place_id>/notes/",
         update_notes,
         name="update_notes"
+    ),
+    path(
+        "project/<int:project_id>/place/<int:place_id>/visit/",
+        toggle_visited,
+        name="toggle_visited"
     ),
 ]

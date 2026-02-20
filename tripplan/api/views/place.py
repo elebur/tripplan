@@ -64,3 +64,14 @@ def update_notes(request: Request, project_id: int, place_id: int) -> Response:
     serializer = ProjectPlaceSerializer(obj, many=False)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["PATCH"])
+def toggle_visited(request: Request, project_id: int, place_id: int) -> Response:
+    obj = get_object_or_404(ProjectPlace, project__id=project_id, place__id=place_id)
+    obj.visited = not obj.visited
+    obj.save()
+
+    serializer = ProjectPlaceSerializer(obj, many=False)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
