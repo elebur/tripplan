@@ -34,10 +34,15 @@ def create_place(request: Request, project_id: int):
         msg = f"project<{project.id}> already has maximum allowed places."
         return Response({"details": msg}, status=status.HTTP_400_BAD_REQUEST)
 
-    ProjectPlace.objects.create(project=project, place=place)
+    pair = ProjectPlace.objects.create(project=project, place=place)
 
     return Response(
-        {"project_id": project.id, "place_id": place.id}, status=status.HTTP_201_CREATED,
+        {
+            "project_id": project.id,
+            "place_id": place.id,
+            "pair_id": pair.id,
+        },
+        status=status.HTTP_201_CREATED,
     )
 
 
