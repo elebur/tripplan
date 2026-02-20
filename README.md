@@ -1,6 +1,12 @@
 # Task & description
 Task description can be found [here](task.md).
 
+# Postman
+
+[Link](https://web.postman.co/workspace/Redirector~ff1fb23a-1c5f-4bb2-9bea-4772c9a56cc3/collection/38964050-a6c41bfe-7811-4dbf-96ae-a88ccfb61b02?action=share&source=copy-link&creator=38964050) to the collection of requests.
+
+
+
 # Setup & launch
 * clone the repository: `git clone https://github.com/elebur/tripplan.git`
 * `cd tripplan`
