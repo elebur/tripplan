@@ -5,6 +5,7 @@ from rest_framework.status import HTTP_201_CREATED
 @pytest.mark.django_db
 class TestSuccessCreation:
     endpoint = "/api/project/"
+
     def test_with_all_data_provided(self, client):
         payload = {
             "name": "New Name",
@@ -69,10 +70,16 @@ class TestSuccessCreation:
         assert resp.text == '{"project_id":1}'
         assert resp.status_code == HTTP_201_CREATED
 
+    def test_with_name_exactly_max_length(self, client):
+        assert 1 == 2
+
 
 @pytest.mark.django_db
 class TestFailCreation:
     def test_creation_without_name(self, client):
+        assert 1 == 2
+
+    def test_name_longer_than_allowed(self, client):
         assert 1 == 2
 
     def test_creation_with_malformed_date(self, client):
