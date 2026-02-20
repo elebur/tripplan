@@ -42,6 +42,15 @@ def create_place(request: Request, project_id: int):
 
 
 @api_view(["GET"])
+def get_place(request: Request, project_id: int, place_id: int) -> Response:
+    obj = get_object_or_404(ProjectPlace, project__id=project_id, place__id=place_id)
+
+    serializer = ProjectPlaceSerializer(obj, many=False)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
 def list_places(request: Request, project_id: int):
     places = ProjectPlace.objects.select_related("place", "project").filter(project__id=project_id)
     serializer = ProjectPlaceSerializer(places, many=True)
