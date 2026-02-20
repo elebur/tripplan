@@ -25,7 +25,7 @@ Task description can be found [here](task.md).
 The API root url is http://localhost:8000/api/
 
 # Tests
-* install dependencies: `pip install -r requirements-test.txt`
+* install dependencies: `pip install -r requirements-tests.txt`
 * in the folder with the file `pytest.ini` run command `pytest`
 
 ***NOTE***: most of the tests will fail, because they are just placeholders with `assert 1 == 2` in their body. I put them to show what I would test.
