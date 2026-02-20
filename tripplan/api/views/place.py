@@ -1,16 +1,13 @@
 from tripplan.settings import MAX_ALLOWED_PLACES_PER_PROJECT
-from django.http import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.serializers import ValidationError
 
 from api.seralizers import PlaceSerializer, ProjectPlaceSerializer
 from api.views.services import fetch_and_cache_single_place
-from core.models import Place, Project, ProjectPlace
+from core.models import Project, ProjectPlace
 
 
 @api_view(["POST"])
