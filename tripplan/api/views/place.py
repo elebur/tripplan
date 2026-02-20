@@ -51,3 +51,19 @@ def list_places(request: Request, project_id: int):
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+@api_view(["PATCH"])
+def update_notes(request: Request, project_id: int, place_id: int) -> Response:
+    input_data_serializer = ProjectPlaceSerializer(data=request.data, many=False)
+    if not input_data_serializer.is_valid():
+        return Response(
+            {"details": input_data_serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    obj = get_object_or_404(ProjectPlace, project__id=project_id, place__id=place_id)
+    obj.notes = input_data_serializer.validated_data["notes"]
+    obj.save()
+    serializer = ProjectPlaceSerializer(obj, many=False)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
