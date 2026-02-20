@@ -22,3 +22,4 @@ class ProjectPlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProjectPlace
         fields = "__all__"
+        read_only_fields = ("project", "place")
