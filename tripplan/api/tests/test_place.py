@@ -9,6 +9,9 @@ class TestCreation:
     def test_duplicated_place(self, client):
         assert 1 == 2
 
+    def test_more_than_allowed(self, client):
+        assert 1 == 2
+
     def test_invalid_place_artic_id(self, client):
         assert 1 == 2
 
