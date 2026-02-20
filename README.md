@@ -5,8 +5,6 @@ Task description can be found [here](task.md).
 
 [Link](https://web.postman.co/workspace/Redirector~ff1fb23a-1c5f-4bb2-9bea-4772c9a56cc3/collection/38964050-a6c41bfe-7811-4dbf-96ae-a88ccfb61b02?action=share&source=copy-link&creator=38964050) to the collection of requests.
 
-
-
 # Setup & launch
 
 ## Manual
@@ -25,6 +23,12 @@ Task description can be found [here](task.md).
 * `docker compose up`
 
 The API root url is http://localhost:8000/api/
+
+# Tests
+* install dependencies: `pip install -r requirements-test.txt`
+* in the folder with the file `pytest.ini` run command `pytest`
+
+***NOTE***: most of the tests will fail, because they are just placeholders with `assert 1 == 2` in their body. I put them to show what I would test.
 
 # Project endpoints
 ## Errors
