@@ -73,7 +73,7 @@ def get_project(request: Request, pk: int) -> Response:
 def delete_project(request: Request, pk: int) -> Response:
     project = get_object_or_404(Project, pk=pk)
     project_id = project.id
-    if project.places.filter(visited = True).exists():
+    if Place.objects.filter(projectplace__project__id=project_id, projectplace__visited=True):
         msg = (f"The project<{project_id}> cannot be deleted because it has "
                "places that were visited")
         raise ValidationError({"details": msg}, code=status.HTTP_409_CONFLICT)
