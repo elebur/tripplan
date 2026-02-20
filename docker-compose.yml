@@ -1,0 +1,15 @@
+services:
+  vote_api:
+    build:
+      context: .
+    volumes:
+      - db-data:/app/tripplan/data
+    command: bash -c "
+      python /app/tripplan/manage.py migrate
+      && python /app/tripplan/manage.py runserver 0.0.0.0:8000"
+    container_name: tripplan
+    ports:
+      - "8000:8000"
+
+volumes:
+  db-data:

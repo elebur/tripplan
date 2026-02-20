@@ -8,6 +8,8 @@ Task description can be found [here](task.md).
 
 
 # Setup & launch
+
+## Manual
 * clone the repository: `git clone https://github.com/elebur/tripplan.git`
 * `cd tripplan`
 * create a virtual environment: `python -m venv .venv`
@@ -16,6 +18,11 @@ Task description can be found [here](task.md).
 * navigate to the project root: `cd tripplan`
 * apply migrations: `python manage.py migrate`
 * run the development server: `python manage.py runserver`
+
+## Docker compose
+* clone the repository: `git clone https://github.com/elebur/tripplan.git`
+* `cd tripplan`
+* `docker compose up`
 
 The API root url is http://localhost:8000/api/
 
